@@ -1,20 +1,36 @@
 from pymongo import MongoClient
+import os
+from dotenv import load_dotenv
 
 # התחברות לשרת מרוחק של מונגו (MongoDB Atlas)
-client = MongoClient("mongodb+srv://chandlerandmonikathe1:aooXBxyjqel6oxhH@cluster0.xdzmbiv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
-db = client['careDB']
-collection = db['patients']
-collection.insert_one({"name": "ישראל ישראלי", "age": 30})
 
-try:
-    # ננסה לשלוף את שמות המסדים כדי לבדוק חיבור
-    client.server_info()
-    print("התחברת בהצלחה לשרת המרוחק!")
 
-    # שליפת הרשומה שהכנסנו לדאטה בייס
-    patient = collection.find_one({"name": "ישראל ישראלי", "age": 30})
-    print("הרשומה שנשמרה בדאטה בייס:", patient)
-
-except Exception as e:
-    print("החיבור לשרת נכשל:", e)
+def connect_to_database():
+    load_dotenv()  # טוען את משתני הסביבה מהקובץ .env
+    mongo_uri = os.getenv("MONGO_URI")
+    if not mongo_uri:
+        raise ValueError("MONGO_URI לא מוגדר בקובץ .env")
+    careDB = os.getenv("DB_NAME", "careDB")  # שם ברירת מחדל למסד הנתונים
+    client = MongoClient(mongo_uri)
+    print("חיבור לשרת המרוחק:", mongo_uri)
+    db = client[careDB]
+    collection = db['packages']  # שם האוסף (collection) שבו נשמור את הנתונים
+    print(f"התחברנו למסד הנתונים {careDB} ואוסף {collection.name}")
+    try:
+        client.admin.command('ping')  # בדיקת חיבור
+        print("החיבור למסד הנתונים תקין.")
+    except Exception as e:
+        print("שגיאה בחיבור למסד הנתונים:", e)
+        client.close()
+        raise
+    return client, collection
+if __name__ == "__main__":
+    client, collection = connect_to_database()
+    # כאן אפשר להוסיף קוד נוסף לעבודה עם מסד הנתונים
+    # לדוגמה, הוספת מסמך חדש לאוסף
+    sample_document = {"name": "test", "value": 123}
+    collection.insert_one(sample_document)
+    print("מסמך נוסף בהצלחה:", sample_document)
+    client.close()  # סגירת החיבור בסיום
+    
