@@ -1,6 +1,9 @@
 from careDataBase import connect
 from careDataBase.dataModel import Version_Package
 from careDataBase.get_data import get_data, check_packages_for_updates
+from careGit.update_git import update_if_need
+
+from pymongo.collection import Collection
 
 def main():
     # התחברות למסד הנתונים
@@ -19,11 +22,9 @@ def main():
     # print("the package save succesfull", package.name)
 
     # שליפת כל החבילות מהאוסף
-    packages = get_data(collection)
-    print(f"finding{len(packages)} packages in data base")
-    update_packages = check_packages_for_updates(packages)
-    if update_packages:
-        print(f"finding {len(update_packages)} packages to upgrade")
+    packages: Collection = get_data(collection)
+    print(f"finding {len(packages)} packages in data base")
+    update_if_need(collection, packages)
 
     # סגירת החיבור למסד הנתונים
     client.close()
