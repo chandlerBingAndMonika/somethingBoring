@@ -7,7 +7,7 @@ def connect_to_database():
     load_dotenv()
     mongo_uri = os.getenv("MONGO_URI")
     db_name = os.getenv("DB_NAME", "careDB")
-    collection_name = os.getenv("DBCOLLECTION", "version__package")
+    collection_name = os.getenv("DBCOLLECTION", "version__packages")
 
     try:
         # התחברות עם pymongo

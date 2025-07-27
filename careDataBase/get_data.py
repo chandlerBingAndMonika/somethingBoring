@@ -1,10 +1,10 @@
 from careGit.check_upgrades import check_latest_version
-from careDataBase.dataModel import Version_Package
+from careDataBase.dataModel import Version_Packages
 
 from typing import List
 from pymongo.collection import Collection
 
-def get_data(collection: Collection) -> List[Version_Package]:
+def get_data(collection: Collection) -> List[Version_Packages]:
     all_packages = collection.find()  # שליפת כל החבילות מהאוסף
     packages_list = []
     for package in all_packages:
@@ -12,7 +12,7 @@ def get_data(collection: Collection) -> List[Version_Package]:
         package.pop('_id', None)
         package.pop('value', None)
         # המרת המילון לאובייקט של Version_Package
-        packages_list.append(Version_Package(**package))
+        packages_list.append(Version_Packages(**package))
 
     print(f"Found {len(packages_list)} packages in the database")
     for package in all_packages:
@@ -20,7 +20,7 @@ def get_data(collection: Collection) -> List[Version_Package]:
     return packages_list
 
 
-def check_packages_for_updates(packages: List[Version_Package]) -> List[Version_Package]:
+def check_packages_for_updates(packages: List[Version_Packages]) -> List[Version_Packages]:
     updated_packages = []
     for package in packages:
         print(f"Package: {package.name}, Version: {package.version}, Repo: {package.repo_url}")
