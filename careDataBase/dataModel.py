@@ -8,4 +8,5 @@ class Version_Packages(Document):
     version = StringField(required=True)
     isUpdating = bool = False
     web_site_to_version = StringField(default="")  # כתובת אתר אם יש
+    is_direct = BooleanField(default="False")
 
