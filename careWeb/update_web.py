@@ -25,7 +25,7 @@ def update_web_if_need(collection: Collection, package_list: List[Version_Packag
             download_url = package.repo_url
         else:
             download_url = str(get_link_download(package.repo_url))
-        is_download = download_package(download_url, package.storage_path, package.name)
+        is_download = download_package(download_url, package.name)
         if is_download == 0:
             update_data(collection, package.name, latest)
 

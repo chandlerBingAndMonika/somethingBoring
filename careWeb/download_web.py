@@ -2,12 +2,12 @@ import os
 import requests
 from dotenv import load_dotenv
 
-def download_package(url, path, name):
+def download_package(url,name):
     load_dotenv()
 
     try:
         # הנתיב לתיקייה שבה יישמר הקובץ
-        target_dir = os.getenv("TARGER_REPO", path)
+        target_dir = os.getenv("TARGET_REPO")
         os.makedirs(target_dir, exist_ok=True)  # נוודא שהתיקייה קיימת
 
         # הנתיב המלא לקובץ
